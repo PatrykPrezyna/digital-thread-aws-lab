@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.edu/digital-thread-aws-lab/event.schema.json",
+  "title": "DigitalThreadPackingArmEvent",
+  "description": "Shared event contract for the Digital Thread lab. The simulator, the real-arm agent, Glue/Athena/Redshift, and the fault-alert Lambda all depend on this schema. Treat it as design data: it captures requirements for a 5-axis pick-and-place packing cell, including the robot program and firmware versions that produced each event. Change it deliberately, version it, and keep producers and consumers in sync.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "timestamp",
+    "event_type",
+    "robot_id",
+    "cell_id",
+    "state",
+    "program_version",
+    "firmware_version",
+    "gripper_state",
+    "j1_deg",
+    "j2_deg",
+    "j3_deg",
+    "j4_deg",
+    "j5_deg",
+    "tcp_x_mm",
+    "tcp_y_mm",
+    "tcp_z_mm"
+  ],
+  "properties": {
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "UTC instant the event was observed on the device, ISO-8601 with Z."
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "ITEM_PRESENTED",
+        "ITEM_SCANNED",
+        "PICK_START",
+        "PICK_OK",
+        "GRIP_FAIL",
+        "PLACE_OK",
+        "BOX_FULL",
+        "BOX_SWAP",
+        "TELEMETRY",
+        "FAULT",
+        "FAULT_CLEARED",
+        "ESTOP",
+        "ESTOP_RESET"
+      ]
+    },
+    "robot_id": { "type": "string", "description": "Stable identifier of the packing arm, e.g. arm-01." },
+    "cell_id": { "type": "string", "description": "Lab cell the arm belongs to, e.g. lab-cell-01." },
+    "item_id": { "type": ["string", "null"], "description": "Item currently in work, if any." },
+    "barcode": { "type": ["string", "null"] },
+    "box_id": { "type": ["integer", "null"], "minimum": 1, "description": "Target packing box / carton (1-indexed)." },
+    "order_id": { "type": ["string", "null"], "description": "Customer or lab order the box is being packed for." },
+    "state": {
+      "type": "string",
+      "enum": ["IDLE", "HOMING", "PICKING", "MOVING", "PLACING", "FAULT", "ESTOP", "RECOVERING"]
+    },
+    "fault_code": {
+      "type": ["string", "null"],
+      "enum": ["GRIP_FAIL", "COLLISION", "AXIS_LIMIT", "JOINT_OVERCURRENT", null],
+      "description": "Set on FAULT (and sometimes GRIP_FAIL) events."
+    },
+    "fault_axis": {
+      "type": ["integer", "null"],
+      "minimum": 1,
+      "maximum": 5,
+      "description": "Joint index 1–5 when the fault is axis-specific (AXIS_LIMIT, JOINT_OVERCURRENT, sometimes COLLISION)."
+    },
+    "cycle_time_ms": {
+      "type": ["integer", "null"],
+      "minimum": 0,
+      "description": "Set on PLACE_OK: elapsed ms from ITEM_PRESENTED to place."
+    },
+    "program_version": {
+      "type": "string",
+      "description": "Version of the packing program / robot configuration that produced the event. This is a digital-thread field: it links design and requirements to observed faults."
+    },
+    "firmware_version": {
+      "type": "string",
+      "description": "Motion-controller / firmware version running on the arm."
+    },
+    "gripper_state": {
+      "type": "string",
+      "enum": ["OPEN", "CLOSED", "GRIPPING"]
+    },
+    "j1_deg": { "type": "number", "description": "Base joint angle, degrees." },
+    "j2_deg": { "type": "number", "description": "Shoulder joint angle, degrees." },
+    "j3_deg": { "type": "number", "description": "Elbow joint angle, degrees." },
+    "j4_deg": { "type": "number", "description": "Wrist pitch angle, degrees." },
+    "j5_deg": { "type": "number", "description": "Wrist roll angle, degrees." },
+    "j1_current_a": { "type": "number" },
+    "j2_current_a": { "type": "number" },
+    "j3_current_a": { "type": "number" },
+    "j4_current_a": { "type": "number" },
+    "j5_current_a": { "type": "number" },
+    "j1_temp_c": { "type": "number" },
+    "j2_temp_c": { "type": "number" },
+    "j3_temp_c": { "type": "number" },
+    "j4_temp_c": { "type": "number" },
+    "j5_temp_c": { "type": "number" },
+    "tcp_x_mm": { "type": "number", "description": "Tool-center-point X in the cell frame, millimetres." },
+    "tcp_y_mm": { "type": "number" },
+    "tcp_z_mm": { "type": "number" },
+    "tcp_rx_deg": { "type": "number" },
+    "tcp_ry_deg": { "type": "number" },
+    "tcp_rz_deg": { "type": "number" }
+  }
+}

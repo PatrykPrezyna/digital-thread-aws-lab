@@ -1,0 +1,2 @@
+# Test-only dependencies. The Lambda itself needs no extra packages.
+pytest>=7.0.0

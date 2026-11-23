@@ -1,0 +1,3 @@
+boto3>=1.34.0
+# Optional, only if you connect a real arm with device certificates:
+# paho-mqtt>=2.0.0

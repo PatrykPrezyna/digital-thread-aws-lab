@@ -1,0 +1,38 @@
+# Local config and secrets — never commit these
+infra/config.env
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials
+.aws/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+.env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Tooling / OS
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Generated artifacts
+*.zip
+!tests/**/*.json
+infra/*.rendered.json
+/dist/
+/build/
+athena-results/

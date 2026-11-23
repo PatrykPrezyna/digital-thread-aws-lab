@@ -1,0 +1,14 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "PutRecordsToLabStreamOnly",
+      "Effect": "Allow",
+      "Action": [
+        "firehose:PutRecord",
+        "firehose:PutRecordBatch"
+      ],
+      "Resource": ["arn:aws:firehose:${REGION}:${ACCOUNT_ID}:deliverystream/${FIREHOSE_STREAM_NAME}"]
+    }
+  ]
+}

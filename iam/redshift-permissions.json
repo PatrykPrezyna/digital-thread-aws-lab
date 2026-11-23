@@ -1,0 +1,32 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ReadGlueCatalogForSpectrum",
+      "Effect": "Allow",
+      "Action": [
+        "glue:GetDatabase",
+        "glue:GetDatabases",
+        "glue:GetTable",
+        "glue:GetTables",
+        "glue:GetPartition",
+        "glue:GetPartitions",
+        "glue:BatchGetPartition"
+      ],
+      "Resource": [
+        "arn:aws:glue:${REGION}:${ACCOUNT_ID}:catalog",
+        "arn:aws:glue:${REGION}:${ACCOUNT_ID}:database/${GLUE_DATABASE}",
+        "arn:aws:glue:${REGION}:${ACCOUNT_ID}:table/${GLUE_DATABASE}/*"
+      ]
+    },
+    {
+      "Sid": "ReadLabTelemetryPrefix",
+      "Effect": "Allow",
+      "Action": ["s3:GetObject", "s3:ListBucket", "s3:GetBucketLocation"],
+      "Resource": [
+        "arn:aws:s3:::${BUCKET}",
+        "arn:aws:s3:::${BUCKET}/${S3_PREFIX}*"
+      ]
+    }
+  ]
+}
